@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from enum import Enum
+from pydantic import BaseModel
+from typing import Optional
 app=FastAPI()
 @app.get('/')
 async def root():
@@ -35,3 +37,22 @@ def get_food(food_name:FoodEnum):
         return {'foodName':food_name}
     elif food_name==FoodEnum.dairy:
         return {'foodName':food_name}
+
+# @app.get('/items')
+# async def list_items():
+fake_db=['alsdkf','asdfk','aslkdfsdflaskdf']
+@app.get('/items')
+def list_items(skip:int=0,limit:int=4):
+    return fake_db[skip:skip+limit]
+
+class Item(BaseModel):
+    name:str 
+    desc:Optional[str]=None 
+    price:float 
+    tax:Optional[float]=None
+
+@app.post('/items')
+def create_item(item:Item):
+    item_dictionary=item.dict()
+
+    return item_dictionary
