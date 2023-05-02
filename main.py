@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Query,Path
 from enum import Enum
 from pydantic import BaseModel
 from typing import Optional
@@ -56,3 +56,30 @@ def create_item(item:Item):
     item_dictionary=item.dict()
 
     return item_dictionary
+
+
+#when three dots are present then it means that it is required .
+#in request ?q=asd&?q=sdk -> then here sdk is stored in q if we want to store list of values then we have to use List[str]
+
+@app.get('/items')
+async def read_items(q: Optional[str]=Query(...,max_length=4)):
+    res={'items':[{'items':'foo'},{'items':'bar'}]}
+    if(q):
+        res.update({'q':q})
+    return res 
+# @app.get('/items')
+# async def read_items(q:Optional[str]=Query(None,max_length=4)):
+#     res={'items':[{'items':'foo'},{'items':'bar'}]}
+#     if(q):
+#         res.update({'q':q})
+#     return res 
+@app.get('/items_validation/{item_id}')
+def read_items_validation(
+    q:str,
+    item_id:Optional[int]=Path(...,title='The ID of the item to get',gt=4),
+    # q:Optional[str]=Query(None,alias='Item-Query')
+    ):
+    res={'item_id':item_id}
+    if(q):
+        res.update({'q':q})
+    return res 
