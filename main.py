@@ -78,8 +78,10 @@ def read_items_validation(
     q:str,
     item_id:Optional[int]=Path(...,title='The ID of the item to get',gt=4),
     # q:Optional[str]=Query(None,alias='Item-Query')
+    # item_id:Optional[str]=Query(None,alias='item-query')
     ):
     res={'item_id':item_id}
     if(q):
         res.update({'q':q})
     return res 
+
